@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ColourSetting { none, blue, red }
 
 public class ColourChange : MonoBehaviour
 {
-    public Color worldRed;
-    public Color worldBlue;
-    public Light worldLight;
+    [ColorUsage(true, true)]
+    public Color worldRed, worldBlue, worldWhite;
     public Camera playerCamera;
 
     private ColourSetting curColour = ColourSetting.none;
@@ -16,7 +16,8 @@ public class ColourChange : MonoBehaviour
 
     public Animator eyelids;
     public Animator glasses;
-    public bool movedGlasses = false;
+    private bool glassesOn = false;
+    private bool movedGlasses = false;
 
     void Update()
     {
@@ -34,13 +35,13 @@ public class ColourChange : MonoBehaviour
         }
         //DEBUG ONLY
         //Swap away from lenses for testing purposes
-        if (Input.GetKeyUp("q"))
+        /*if (Input.GetKeyUp("q"))
         {
             if (curColour != ColourSetting.none)
             {
                 StartMove(ColourSetting.none);
             }
-        }
+        }*/
     }
 
     //Start the blink animations and set the next colour to swap to
@@ -55,22 +56,25 @@ public class ColourChange : MonoBehaviour
     //Called by the blink animation at the point the eyes are entirely closed as to transition to the next colour
     public void SwapColour()
     {
+        if (!glassesOn)
+        {
+            //Put the glasses on
+            glasses.gameObject.GetComponent<Image>().color = Color.white;
+            glassesOn = true;
+        }
         switch (nextColour)
         {
             case ColourSetting.red:
                 playerCamera.backgroundColor = worldRed;
                 RenderSettings.ambientLight = worldRed;
-                worldLight.color = worldRed;
                 break;
             case ColourSetting.blue:
                 playerCamera.backgroundColor = worldBlue;
                 RenderSettings.ambientLight = worldBlue;
-                worldLight.color = worldBlue;
                 break;
             case ColourSetting.none:
-                playerCamera.backgroundColor = Color.white;
-                RenderSettings.ambientLight = Color.white;
-                worldLight.color = Color.white;
+                playerCamera.backgroundColor = worldWhite;
+                RenderSettings.ambientLight = worldWhite;
                 break;
         }
 

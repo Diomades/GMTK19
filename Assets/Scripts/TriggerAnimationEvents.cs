@@ -6,6 +6,6 @@ public class TriggerAnimationEvents : MonoBehaviour
 {
     public void TwiggerSwapColour()
     {
-        GameObject.Find("Player").GetComponent<ColourChange>().SwapColour();
+        GameObject.Find("ScriptController").GetComponent<ColourChange>().SwapColour();
     }
 }
